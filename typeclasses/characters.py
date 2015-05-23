@@ -13,8 +13,8 @@ from evennia import DefaultCharacter
 
 import random
 
-from  world import alternity
-from  alternity import PROFESSIONS, PROFESSION_ACTION_CHECK_BONUS
+from world import alternity
+from world.alternity import PROFESSIONS, PROFESSION_ACTION_CHECK_BONUS
 from world.dice import roll
 
 class Character(DefaultCharacter):
