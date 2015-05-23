@@ -20,6 +20,8 @@
 @tel jam#02
 #
 @desc here = The walls are covered in blank monitors, and there is the smell of ozone in this room. Here too the vents are silent and the fans do not spin. It is a bit cooler in this room than the others.
+
+The console that controls the life support systems sits in the middle of the room. It is clearly quite damaged.
 #
 @open west;w = jam#01
 
