@@ -155,3 +155,49 @@ class Object(DefaultObject):
 
      """
     pass
+
+
+class BrokenObject(object):
+    """Object that teleports a character to a new location when it is "repaired"
+
+    Important attributes:
+      required_repairs - number of repairs needed
+      repairs - number of repair actions so far
+      success_teleport_to - where to teleport in case of success
+      success_teleport_msg - message to echo while teleporting to success
+      failure_teleport_to - where to teleport to in case of failure
+      failure_teleport_msg - message to echo while teleporting to failure
+    """
+
+    def at_object_creation(self):
+        super(BrokenObject, self).at_object_creation()
+
+        self.db.required_repairs = 1
+        self.db.repairs = 0.0
+        self.db.success_teleport_to = None
+        self.db.success_teleport_msg = ""
+        self.db.failure_teleport_to = ""
+        self.db.failure_teleport_msg = ""
+
+    def return_appearance(self, looker):
+        """Show how damaged the object is"""
+        retval = super(BrokenObject, self).return_appearance()
+
+        if self.db.required_repairs >= 9:
+            desc = "It is so badly damaged as to be barely recognisable. It will requires a major overhaul."
+        elif self.db.required_repairs >= 7:
+            desc = "It is very badly damaged. It requires extensive repairs."
+        elif self.db.required_repairs >= 5:
+            desc = "It is badly damaged. It requires extensive repairs."
+        elif self.db.required_repairs >= 3:
+            desc = "It is damaged, and needs some repairs before it will operate."
+        elif self.db.required_repairs >= 0:
+            desc = "It is slight damaged, but some minor will return it to working order."
+        else:
+            desc = "It's hard to tell how damaged it is."
+
+        return retval + "\n\n" + desc
+
+
+
+
