@@ -127,3 +127,28 @@ class MuxCommand(default_cmds.MuxCommand):
         # this can be removed in your child class, it's just
         # printing the ingoing variables as a demo.
         super(MuxCommand, self).func()
+
+class CmdAbilities(Command):
+    """List a character's ability scores
+
+    Usage:
+      abilities [character]
+    """
+    key = "abilities"
+    aliases = ["abi"]
+    lock = "cmd:all()"
+    help_category = "General"
+
+    def func(self):
+        char = self.caller
+        output = "Str: %d Dex: %d Con: %d Int: %d Wil: %d Per: %d" % (
+        # abilities
+            char.db.strength,
+            char.db.dexterity,
+            char.db.constitution,
+            char.db.intelligence,
+            char.db.will,
+            char.db.personality,
+        )
+
+        self.caller.msg(output)
