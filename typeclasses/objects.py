@@ -157,7 +157,7 @@ class Object(DefaultObject):
     pass
 
 
-class BrokenObject(object):
+class BrokenObject(Object):
     """Object that teleports a character to a new location when it is "repaired"
 
     Important attributes:
@@ -181,7 +181,7 @@ class BrokenObject(object):
 
     def return_appearance(self, looker):
         """Show how damaged the object is"""
-        retval = super(BrokenObject, self).return_appearance()
+        retval = super(BrokenObject, self).return_appearance(looker)
 
         if self.db.required_repairs >= 9:
             desc = "It is so badly damaged as to be barely recognisable. It will requires a major overhaul."
@@ -192,7 +192,7 @@ class BrokenObject(object):
         elif self.db.required_repairs >= 3:
             desc = "It is damaged, and needs some repairs before it will operate."
         elif self.db.required_repairs >= 0:
-            desc = "It is slight damaged, but some minor will return it to working order."
+            desc = "It is slight damaged, but some minor repairs will return it to working order."
         else:
             desc = "It's hard to tell how damaged it is."
 
