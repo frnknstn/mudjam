@@ -32,4 +32,6 @@ class CmdRepair(Command):
                                          obj.name),
                                      exclude=caller)
 
+        caller.msg("Your repair skill score is %d (%+d steps)" % caller.get_skill_score("Repair"))
+
         obj.attempt_repair(caller)

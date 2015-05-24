@@ -16,6 +16,7 @@ from evennia import DefaultCharacter
 from world import alternity
 from world.alternity import PROFESSIONS, PROFESSION_ACTION_CHECK_BONUS
 from world.dice import roll
+from world.skills import skill_list
 
 from commands.default_cmdsets import SkillCmdSet
 
@@ -62,6 +63,42 @@ class Character(DefaultCharacter):
 
         # skills
         self.cmdset.add(SkillCmdSet, permanent=True)
+
+        self.db.skills = {"Technical Science": 1, "Repair": 1}
+
+    def get_ability_score(self, ability_name):
+        """Get our ability score for an ability specified by a string
+
+        :type ability_name: str
+        """
+        assert ability_name in alternity.ABILITIES
+        return getattr(self.db, ability_name)
+
+    def get_skill_score(self, skill):
+        """Determine the effective skill score and step modifier
+
+        Returns (score, situational modifier)
+
+        :returns: tuple[int, int]
+        """
+        if isinstance(skill, str):
+            skill = skill_list[skill]
+
+        if skill.broad:
+            # broad skill
+            if skill.name in self.db.skills:
+                return (self.get_ability_score(skill.ability), -1)
+            else:
+                return (self.get_ability_score(skill.ability) // 2, -1)
+        else:
+            # speciality skill
+            if skill.name in self.db.skills:
+                return (self.get_ability_score(skill.ability) + self.db.skills[skill.name], 0)
+            elif skill.parent.name in self.db.skills:
+                return (self.get_ability_score(skill.ability), -1)
+            else:
+                return (self.get_ability_score(skill.ability) // 2, -1)
+
 
     # resistance modifiers
     @property
