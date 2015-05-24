@@ -20,4 +20,6 @@ def roll(dice, sides, bonus):
 
     return total
 
+def alternity_check():
+    pass
 

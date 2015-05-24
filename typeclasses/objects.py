@@ -10,7 +10,7 @@ the other types, you can do so by adding this as a multiple
 inheritance.
 
 """
-from evennia import DefaultObject
+from evennia import DefaultObject, search_object
 
 class Object(DefaultObject):
     """
@@ -172,8 +172,8 @@ class BrokenObject(Object):
     def at_object_creation(self):
         super(BrokenObject, self).at_object_creation()
 
-        self.db.required_repairs = 1
-        self.db.repairs = 0.0
+        self.db.reset_repairs = 0
+        self.db.required_repairs = 6
         self.db.success_teleport_to = None
         self.db.success_teleport_msg = ""
         self.db.failure_teleport_to = ""
@@ -191,12 +191,42 @@ class BrokenObject(Object):
             desc = "It is badly damaged. It requires extensive repairs."
         elif self.db.required_repairs >= 3:
             desc = "It is damaged, and needs some repairs before it will operate."
-        elif self.db.required_repairs >= 0:
+        elif self.db.required_repairs > 0:
             desc = "It is slight damaged, but some minor repairs will return it to working order."
+        elif self.db.required_repairs == 0:
+            desc = "It has been repaired and is now in working order."
         else:
             desc = "It's hard to tell how damaged it is."
 
         return retval + "\n\n" + desc
+
+    def attempt_repair(self, caller):
+        if self.db.required_repairs <= 0:
+            return
+
+
+        self.db.required_repairs = max(self.db.required_repairs - 1, 0)
+
+        if self.db.required_repairs <= 0:
+            caller.msg("Repairs are now complete.")
+            if self.db.success_teleport_to != "":
+                # find the telport target
+                teleport_targets = search_object(self.db.success_teleport_to)
+                if not teleport_targets:
+                    print "no valid teleport target for %s was found." % self.db.success_teleport_to
+                    return
+                elif len(teleport_targets) > 1:
+                    print "found more than one teleport target, aborting."
+                    return
+                teleport_target = teleport_targets[0]
+
+                # do the teleport of all contents
+                for con in (x for x in self.location.contents if not x.destination and x != self):
+                    con.msg(self.db.success_teleport_msg)
+                    con.move_to(teleport_target, quiet=True, move_hooks=False)
+
+                # reset the puzzle
+                self.db.required_repairs = self.db.reset_repairs
 
 
 
