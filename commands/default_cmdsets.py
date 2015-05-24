@@ -14,9 +14,10 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 
 """
 
-from evennia import default_cmds
+from evennia import default_cmds, CmdSet
 import evennia.contrib.dice
 import commands.command
+import commands.skills
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -93,3 +94,12 @@ class SessionCmdSet(default_cmds.SessionCmdSet):
         #
         # any commands you add below will overload the default ones.
         #
+
+class SkillCmdSet(CmdSet):
+    """
+    This cmdset allows the use of character skills
+    """
+    key = "Skills"
+    def at_cmdset_creation(self):
+        "This is called at initialization"
+        self.add(commands.skills.CmdRepair())

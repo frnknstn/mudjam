@@ -9,13 +9,15 @@ creation commands.
 """
 from __future__ import division
 
-from evennia import DefaultCharacter
-
 import random
+
+from evennia import DefaultCharacter
 
 from world import alternity
 from world.alternity import PROFESSIONS, PROFESSION_ACTION_CHECK_BONUS
 from world.dice import roll
+
+from commands.default_cmdsets import SkillCmdSet
 
 class Character(DefaultCharacter):
     """
@@ -57,6 +59,9 @@ class Character(DefaultCharacter):
         self.db.stun = self.db.stun_max
         self.db.wound = self.db.wound_max
         self.db.mortal = self.db.mortal_max
+
+        # skills
+        self.cmdset.add(SkillCmdSet, permanent=True)
 
     # resistance modifiers
     @property
