@@ -204,6 +204,8 @@ class BrokenObject(Object):
         if self.db.required_repairs <= 0:
             return
 
+        score, sit = caller.get_skill_score("Repair")
+
 
         self.db.required_repairs = max(self.db.required_repairs - 1, 0)
 

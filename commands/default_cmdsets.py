@@ -37,6 +37,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         #
         self.add(evennia.contrib.dice.CmdDice())
         self.add(commands.command.CmdAbilities())
+        self.add(commands.command.CmdAltRoll())
 
 
 class PlayerCmdSet(default_cmds.PlayerCmdSet):

@@ -8,6 +8,8 @@ Commands describe the input the player can do to the game.
 from evennia import Command as BaseCommand
 from evennia import default_cmds
 
+from world.dice import AlternityCheck
+
 
 class Command(BaseCommand):
     """
@@ -137,7 +139,7 @@ class CmdAbilities(Command):
     key = "abilities"
     aliases = ["abi"]
     lock = "cmd:all()"
-    help_category = "General"
+    help_category = "Alternity"
 
     def func(self):
         char = self.caller
@@ -152,3 +154,58 @@ class CmdAbilities(Command):
         )
 
         self.caller.msg(output)
+
+class CmdAltRoll(Command):
+    """Perform an Alternity ability check"""
+    key = "alternity roll"
+    aliases = ["altroll"]
+    help_category = "Alternity"
+
+    def usage(self):
+        self.caller.msg("Usage:\n  altroll [target value] [situation step] <trivial>")
+
+    def func(self):
+        args = self.args.strip()
+        caller = self.caller
+
+        # parse the args
+        if args == "":
+            self.usage()
+            return
+
+        tokens = args.split()
+        if len(tokens) < 1 or len(tokens) > 3:
+            self.usage()
+            return
+
+        try:
+            target_value = int(tokens[0])
+        except ValueError:
+            self.usage()
+            return
+
+        situation_step = 0
+        trivial = False
+
+        if len(tokens) == 2:
+            try:
+                situation_step = int(tokens[1])
+            except ValueError:
+                self.usage()
+        elif len(tokens) == 3 and tokens[2].lower().startswith("t"):
+            trivial = True
+
+        # do the roll and check the results
+        result = AlternityCheck(target_value, situation_step, trivial)
+
+        message = "%s rolls a %s check of %d at %s: %s (%s)" % (
+            self.caller.name,
+            "trivial" if trivial else "skill",
+            target_value,
+            result.situation_description(),
+            result.result_description(),
+            result.roll_description()
+        )
+
+        # publish the results
+        self.caller.location.msg_contents(message)

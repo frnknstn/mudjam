@@ -6,6 +6,7 @@ class CmdRepair(Command):
     """
 
     key = "repair"
+    lock = "cmd:all()"
     help_category = "skills"
 
     def func(self):
