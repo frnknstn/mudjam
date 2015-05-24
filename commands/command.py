@@ -187,12 +187,12 @@ class CmdAltRoll(Command):
         situation_step = 0
         trivial = False
 
-        if len(tokens) == 2:
+        if len(tokens) >= 2:
             try:
                 situation_step = int(tokens[1])
             except ValueError:
                 self.usage()
-        elif len(tokens) == 3 and tokens[2].lower().startswith("t"):
+        if len(tokens) == 3 and tokens[2].lower().startswith("t"):
             trivial = True
 
         # do the roll and check the results
