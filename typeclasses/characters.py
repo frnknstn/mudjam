@@ -65,17 +65,17 @@ class Character(DefaultCharacter):
 
     # resistance modifiers
     @property
-    def strength_res(self): return self.resisitance_modifier(self.db.strength)
+    def strength_res(self): return self.calc_resistance_modifier(self.db.strength)
     @property
-    def dexterity_res(self): return self.resisitance_modifier(self.db.dexterity)
+    def dexterity_res(self): return self.calc_resistance_modifier(self.db.dexterity)
     @property
-    def constitution_res(self): return self.resisitance_modifier(self.db.constitution)
+    def constitution_res(self): return self.calc_resistance_modifier(self.db.constitution)
     @property
-    def intelligence_res(self): return self.resisitance_modifier(self.db.intelligence)
+    def intelligence_res(self): return self.calc_resistance_modifier(self.db.intelligence)
     @property
-    def will_res(self): return self.resisitance_modifier(self.db.will)
+    def will_res(self): return self.calc_resistance_modifier(self.db.will)
     @property
-    def personality_res(self): return self.resisitance_modifier(self.db.personality)
+    def personality_res(self): return self.calc_resistance_modifier(self.db.personality)
 
     @staticmethod
     def calc_resistance_modifier(score):
